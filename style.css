@@ -1,6 +1,8 @@
 :root {
 	--main-bg-color: #1e1f26;
 	--main-text-color: #ccc;
+	--button-color: #282a36;
+	--white-color: #fff;
 }
 
 * {
@@ -14,18 +16,30 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 100px;
+    gap: 30px;
     color: var(--main-text-color);
+	padding-bottom: 30px;
 }
 
 .table{
     display: flex;
-	justify-content: space-evenly;
+	flex-direction: column;
     width: 80%;
     padding: 2rem;
+	gap: 30px;
     box-shadow: 0 -15px 15px rgba(255, 255, 255, 0.05),
     0 -15px 15px rgba(255, 255, 255, 0.05),0 15px 15px rgba(0, 0, 0, 0.3),
     inset 0 15px 15px rgba(0, 0, 0, 0.3);
+}
+
+.first{
+	display: flex;
+	justify-content: space-evenly;
+	width: 100%;
+}
+
+.second{
+	width: 100%;
 }
 
 .page-header, p {
@@ -52,13 +66,54 @@ body {
 }
 
 #from , #to{
-    height: 20px;
-    margin: 7px;
+    margin: 0 10px;
+	background-color: var(--button-color);
+	border: none;
+	border-radius: 5px;
+	padding: 5px;
+	color: var(--white-color);
+	font-size: 16px;
+	outline: none;
+	transition: all 0.3s ease;
+}
+
+#from:focus, #to:focus {
+	box-shadow: 0 0 5px var(--white-color);
 }
 
 #text{
     height: 20px;
-    margin: 7px;
+	margin: 0 10px;
+	background-color: var(--button-color);
+	border: none;
+	border-radius: 5px;
+	padding: 7px;
+	color: var(--main-text-color);
+	font-size: 16px;
+	outline: none;
+	transition: all 0.3s ease;
+	width: 120px;
+}
+
+#text:focus {
+  box-shadow: 0 0 5px var(--white-color);
+}
+
+button {
+	background-color: var(--main-bg-color);
+	color: var(--main-text-color);
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: all 0.3s ease; 
+	font-size: 2rem;
+	margin-top: 20px;
+}
+
+button:hover {
+	background-color: var(--button-color);
+	color: var(--white-color);
 }
 
 .calculator{
@@ -140,4 +195,10 @@ body {
 	width: 2px;
 	background-color: #f00;
 	border-radius: 2px;
+}
+
+/*Chart*/
+
+canvas {
+	height: 400px;
 }

@@ -19,7 +19,8 @@ setClock();
 
 setInterval(setClock, 1000);
 
-// Charts
+// Chart
+var ctx = document.getElementById('chart').getContext('2d');
 
 var timeData = {
     labels: [],
@@ -32,40 +33,103 @@ var timeData = {
     }]
 };
 
-var chartOptions = {
-    responsive: true,
+const chartOptions = {
     scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true
-            }
-        }]
-    }
+      yAxes: [{
+        ticks: {
+          min: 0,
+          max: 24,
+          stepSize: 1,
+          beginAtZero: true,
+          suggestedMax: 24,
+          suggestedMin: 0
+        }
+      }]
+    },
+    responsive: true,
+    maintainAspectRatio: false
 };
 
-var ctx = document.getElementById('chart').getContext('2d');
-
 var chart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: timeData,
     options: chartOptions
 });
 
-function addData() {
-    var fromTime = document.getElementById('from').value;
-    var toTime = document.getElementById('to').value;
-    var timeUsage = document.getElementById('text').value;
+var submitBtn = document.querySelector('button');
+submitBtn.addEventListener('click', function() {
 
-    if (fromTime && toTime && timeUsage) {
-        timeData.labels.push(timeUsage);
-        var duration = getDuration(fromTime, toTime);
-        timeData.datasets[0].data.push(duration);
-        chart.update();
+  var fromTime = document.getElementById('from').value;
+  var toTime = document.getElementById('to').value;
+  
+  var isTimePeriodAdded = timeData.labels.some(function(label) {
+    return label === fromTime + ' to ' + toTime;
+  });
+
+  if (isTimePeriodAdded) {
+    alert('This time period is already added!');
+    return;
+  }
+
+  var doesTimePeriodOverlap = timeData.datasets[0].data.some(function(data, index) {
+    var existingFromTime = timeData.labels[index].split(' to ')[0];
+    var existingToTime = timeData.labels[index].split(' to ')[1];
+
+    return (fromTime >= existingFromTime && fromTime < existingToTime) || (toTime > existingFromTime && toTime <= existingToTime);
+  });
+
+  if (doesTimePeriodOverlap) {
+    alert('This time period overlaps with an existing time period!');
+    return;
+  }
+
+  var from = new Date("2023-01-01T" + fromTime + ":00");
+  var to = new Date("2023-01-01T" + toTime + ":00");
+  var diffMs = Math.abs(to - from);
+  var diffHrs = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100;
+
+  var textInput = document.getElementById('text').value;
+
+  chart.data.labels.push(textInput);
+  chart.data.datasets[0].data.push(diffHrs);
+  chart.update();
+
+// Calculate
+
+  var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
+    return total + hours;
+  }, 0);
+
+  var freeHoursRemaining = 24 - totalHoursUsed;
+
+  document.getElementById('total-used-time').textContent = totalHoursUsed;
+  document.getElementById('free-time').textContent = freeHoursRemaining;
+});
+
+var removeBtn = document.getElementById('remove');
+removeBtn.addEventListener('click', function() {
+
+  var textInput = document.getElementById('text').value;
+
+  for (var i = 0; i < timeData.labels.length; i++) {
+    if (timeData.labels[i] === textInput) {
+      timeData.labels.splice(i, 1);
+      timeData.datasets[0].data.splice(i, 1);
+      break;
     }
-}
+  }
 
-function getDuration(fromTime, toTime) {
-    var fromDate = new Date('2023-01-01T' + fromTime + ':00Z');
-    var toDate = new Date('2023-01-01T' + toTime + ':00Z');
-    return (toDate.getTime() - fromDate.getTime()) / 1000;
-}
+  chart.update();
+  document.getElementById('text').value = '';
+
+// Calculate
+
+  var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
+    return total + hours;
+  }, 0);
+
+  var freeHoursRemaining = 24 - totalHoursUsed;
+
+  document.getElementById('total-used-time').textContent = totalHoursUsed;
+  document.getElementById('free-time').textContent = freeHoursRemaining;
+});

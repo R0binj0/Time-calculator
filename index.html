@@ -9,29 +9,43 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="page-header">ANALOG CLOCK</div>
+    <div class="page-header">TIME CALCULATOR</div>
     <div class="table">
-        <div class="settings">
-            <p>SET YOUR TIME</p>
-            <div class="field">
-                <p>FROM</p>
-                <input type="time" id="from">
-                <p>TO</p>
-                <input type="time" id="to">
+        <div class="first">
+            <div class="settings">
+                <p>SET YOUR TIME</p>
+                <div class="field">
+                    <p>FROM</p>
+                    <input type="time" id="from">
+                    <p>TO</p>
+                    <input type="time" id="to">
+                </div>
+                <div class="field">
+                    <p>USAGE FOR</p>
+                    <input type="text" id="text">
+                </div>
+                <div>
+                    <button onclick="addData()">SUBMIT</button>
+                    <button id="remove">REMOVE</button>
+                </div>
             </div>
-            <p>TIME USE</p>
-            <div class="field">
-                <p>I USE IT FOR</p>
-                <input type="text" id="text">
+            <div class="clock">
+                <div class="hour"></div>
+                <div class="min"></div>
+                <div class="sec"></div>
             </div>
-            <button onclick="addData()">SUBMIT</button>
+            <div class="calculator">
+                <div class="free">
+                    <p>YOUR FREE TIME: </p>
+                    <p id="free-time"></p>
+                </div>
+                <div class="used">
+                    <p>YOUR USED TIME: </p>
+                    <p id="total-used-time"></p>
+                </div>
+            </div>
         </div>
-        <div class="clock">
-            <div class="hour"></div>
-            <div class="min"></div>
-            <div class="sec"></div>
-        </div>
-        <div class="calculator">
+        <div class="second">
             <canvas id="chart"></canvas>
         </div>
     </div>
