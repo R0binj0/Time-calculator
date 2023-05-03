@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="page-header">ANALOG CLOCK</div>
+    <div class="table">
+        <div class="settings">
+            <p>SET YOUR TIME</p>
+            <div class="field">
+                <p>FROM</p>
+                <input type="time" id="from">
+                <p>TO</p>
+                <input type="time" id="to">
+            </div>
+            <p>TIME USE</p>
+            <div class="field">
+                <p>I USE IT FOR</p>
+                <input type="text" id="text">
+            </div>
+            <button onclick="addData()">SUBMIT</button>
+        </div>
+        <div class="clock">
+            <div class="hour"></div>
+            <div class="min"></div>
+            <div class="sec"></div>
+        </div>
+        <div class="calculator">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
