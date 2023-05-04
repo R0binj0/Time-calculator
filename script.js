@@ -56,14 +56,17 @@ var chart = new Chart(ctx, {
     options: chartOptions
 });
 
+timeData.fromTimes = [];
+timeData.toTimes = [];
+
 var submitBtn = document.querySelector('button');
 submitBtn.addEventListener('click', function() {
 
   var fromTime = document.getElementById('from').value;
   var toTime = document.getElementById('to').value;
   
-  var isTimePeriodAdded = timeData.labels.some(function(label) {
-    return label === fromTime + ' to ' + toTime;
+  var isTimePeriodAdded = timeData.fromTimes.some(function(time, index) {
+    return time === fromTime && timeData.toTimes[index] === toTime;
   });
 
   if (isTimePeriodAdded) {
@@ -71,9 +74,9 @@ submitBtn.addEventListener('click', function() {
     return;
   }
 
-  var doesTimePeriodOverlap = timeData.datasets[0].data.some(function(data, index) {
-    var existingFromTime = timeData.labels[index].split(' to ')[0];
-    var existingToTime = timeData.labels[index].split(' to ')[1];
+  var doesTimePeriodOverlap = timeData.fromTimes.some(function(time, index) {
+    var existingFromTime = time;
+    var existingToTime = timeData.toTimes[index];
 
     return (fromTime >= existingFromTime && fromTime < existingToTime) || (toTime > existingFromTime && toTime <= existingToTime);
   });
@@ -83,6 +86,9 @@ submitBtn.addEventListener('click', function() {
     return;
   }
 
+  timeData.fromTimes.push(fromTime);
+  timeData.toTimes.push(toTime);
+
   var from = new Date("2023-01-01T" + fromTime + ":00");
   var to = new Date("2023-01-01T" + toTime + ":00");
   var diffMs = Math.abs(to - from);
@@ -90,12 +96,11 @@ submitBtn.addEventListener('click', function() {
 
   var textInput = document.getElementById('text').value;
 
-  chart.data.labels.push(fromTime + ' to ' + toTime + " : " + textInput)
+  chart.data.labels.push(textInput);
   chart.data.datasets[0].data.push(diffHrs);
   chart.update();
 
-// Calculate
-
+  // Calculate
   var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
     return total + hours;
   }, 0);
@@ -115,6 +120,8 @@ removeBtn.addEventListener('click', function() {
     if (timeData.labels[i] === textInput) {
       timeData.labels.splice(i, 1);
       timeData.datasets[0].data.splice(i, 1);
+      timeData.fromTimes.splice(i, 1);
+      timeData.toTimes.splice(i, 1);
       break;
     }
   }
@@ -122,8 +129,7 @@ removeBtn.addEventListener('click', function() {
   chart.update();
   document.getElementById('text').value = '';
 
-// Calculate
-
+  // Calculate
   var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
     return total + hours;
   }, 0);
