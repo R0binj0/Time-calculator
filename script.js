@@ -86,9 +86,6 @@ submitBtn.addEventListener('click', function() {
     return;
   }
 
-  timeData.fromTimes.push(fromTime);
-  timeData.toTimes.push(toTime);
-
   var from = new Date("2023-01-01T" + fromTime + ":00");
   var to = new Date("2023-01-01T" + toTime + ":00");
   var diffMs = Math.abs(to - from);
@@ -96,15 +93,21 @@ submitBtn.addEventListener('click', function() {
 
   var textInput = document.getElementById('text').value;
 
+  var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
+    return total + hours;
+  }, 0);
+
+  if (totalHoursUsed + diffHrs > 24) {
+    alert('Total time usage cannot exceed 24 hours!');
+    return;
+  }
+
   chart.data.labels.push(textInput);
   chart.data.datasets[0].data.push(diffHrs);
   chart.update();
 
   // Calculate
-  var totalHoursUsed = chart.data.datasets[0].data.reduce(function(total, hours) {
-    return total + hours;
-  }, 0);
-
+  totalHoursUsed += diffHrs;
   var freeHoursRemaining = 24 - totalHoursUsed;
 
   document.getElementById('total-used-time').textContent = totalHoursUsed;
