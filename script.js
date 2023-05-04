@@ -90,7 +90,7 @@ submitBtn.addEventListener('click', function() {
 
   var textInput = document.getElementById('text').value;
 
-  chart.data.labels.push(textInput);
+  chart.data.labels.push(fromTime + ' to ' + toTime + " : " + textInput)
   chart.data.datasets[0].data.push(diffHrs);
   chart.update();
 
